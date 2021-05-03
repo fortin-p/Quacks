@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello AuthentificationController!{% endblock %}
+
+{% block body %}
+    <style>
+        .example-wrapper {
+            margin: 1em auto;
+            max-width: 800px;
+            width: 95%;
+            font: 18px/1.5 sans-serif;
+        }
+
+        .example-wrapper code {
+            background: #F5F5F5;
+            padding: 2px 6px;
+        }
+    </style>
+
+    <div class="example-wrapper">
+        {{ form_start(formAuth) }}
+        <div class="form-group">
+            <label for="">FirstName</label>
+            {{ form_widget(formAuth.firstname) }}
+            <label for="">LastName</label>
+            {{ form_widget(formAuth.lastname) }}
+            <label for="">DuckName</label>
+            {{ form_widget(formAuth.DuckName) }}
+            <label for="">email</label>
+            {{ form_widget(formAuth.email) }}
+            <label for="">password</label>
+            {{ form_widget(formAuth.password) }}
+
+        </div>
+        <button type="submit" class="btn btn-sucess">Register</button>
+        {{ form_end(formAuth) }}
+    </div>
+{% endblock %}
