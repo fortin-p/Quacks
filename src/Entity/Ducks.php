@@ -4,11 +4,16 @@ namespace App\Entity;
 
 use App\Repository\DucksRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=DucksRepository::class)
+ * @UniqueEntity(fields="email", message="Email déjà pris")
+ * @UniqueEntity(fields="duckname", message="Duckname déjà pris")
  */
-class Ducks
+class Ducks implements UserInterface
 {
     /**
      * @ORM\Id
@@ -28,12 +33,12 @@ class Ducks
     private $lastname;
 
     /**
-     * @ORM\Column(type="string", length=64)
+     * @ORM\Column(type="string", length=25, unique=true)
      */
     private $duckname;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
      */
     private $email;
 
@@ -41,6 +46,11 @@ class Ducks
      * @ORM\Column(type="string", length=255)
      */
     private $password;
+
+    /**
+     * @ORM\Column(type="array")
+     */
+    private $roles = [];
 
 
     public function getId(): ?int
@@ -109,4 +119,23 @@ class Ducks
     }
 
 
+    public function getRoles()
+    {
+        return $this->roles;
+    }
+
+    public function getSalt()
+    {
+        return null;
+    }
+
+    public function getUsername()
+    {
+        return $this->duckname;
+    }
+
+    public function eraseCredentials()
+    {
+        // TODO: Implement eraseCredentials() method.
+    }
 }

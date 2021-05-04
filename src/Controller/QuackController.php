@@ -37,7 +37,7 @@ class QuackController extends AbstractController
     {
 
         return $this->render('quack/listQuack.html.twig', [
-            'quack' => $quack->findAll(),
+            'quacks' => $quack->findAll(),
             'controller_name' => 'QuackController',
 
         ]);
