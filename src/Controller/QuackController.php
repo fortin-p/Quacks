@@ -59,6 +59,7 @@ class QuackController extends AbstractController
 
     /**
      * @Route("/quack/create", name="create")
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
      */
     public function createQuack(Request $request, EntityManagerInterface $manager)
     {
@@ -89,7 +90,7 @@ class QuackController extends AbstractController
      */
     public function modificateQuack(Quack $quack, Request $request, EntityManagerInterface $manager)
     {
-        $this->denyAccessUnlessGranted('EDIT', $quack);
+
         $manager = $this->getDoctrine()->getManager();
         $form = $this->createForm(QuackType::class, $quack);
         $form->handleRequest($request);
@@ -107,10 +108,11 @@ class QuackController extends AbstractController
 
     /**
      * @Route("/quack/delete/{id}", name="delete")
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
      */
     public function deleteQuack(Quack $quack)
     {
-        $this->denyAccessUnlessGranted('DELETE', $quack);
+
         $entityManager = $this->getDoctrine()->getManager();
         if (!$quack) {
             throw $this->createNotFoundException(
