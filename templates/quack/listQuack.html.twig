@@ -1,5 +1,7 @@
-{% extends 'base.html.twig' %}
+{% extends 'base/index.html.twig' %}
 
+{% set formstart = form_start(form) %}
+{% set formend = form_end(form) %}
 {% block title %}Hello listQuack!{% endblock %}
 
 {% block body %}
@@ -15,20 +17,98 @@
             background: #F5F5F5;
             padding: 2px 6px;
         }
+
+        .quack {
+            border: solid 1px black;
+            margin-bottom: 20px;
+
+
+        }
+
+        .image {
+            width: 150px;
+            height: 150px;
+
+        }
     </style>
 
     <div class="example-wrapper">
-        <h1>Hello {{ controller_name }}! ✅</h1>
+        <h1>Hello ✅</h1>
 
         This friendly message is coming from:
         listQuack
+
         {% for quack in quacks %}
+            <pre>
+    {{ quack.getDucks.getUsername }}
+</pre>
+            <div class=" quack">
+                <div class="card ">
+                    <h5 class="card-header">{{ quack.getDucks.getUsername }}
+                        le {{ quack.createdAt|date('d/m/Y') }} </h5>
+                    <p class="card-text"> {{ quack.content }}</p>
+                    {% if quack.image %}
+                        <img class="rounded mx-auto d-block" style="width: 18rem" src="{{ asset(quack.image) }}" alt="">
+                    {% endif %}
+                </div>
 
-            <h1>  {{ quack.content }}</h1>
+                {% if is_granted('DELETE', quack) %}
+                    <a href="{{ path('delete', { 'id': quack.id }) }}" class=" btn btn-danger btn-sm">
+                        <i class="glyphicon glyphicon-trash">Supprimer</i>
+                    </a>
+                {% endif %}
+
+
+                    <a data-toggle="modal" data-target="#exampleModalCenter" class=" btn btn-success btn-sm">
+                        <i class="glyphicon glyphicon-trash">comments</i>
+                    </a>
+
+
+
+                {% if is_granted('EDIT', quack) %}
+                    <a href="{{ path('edit_Quack', { 'id': quack.id }) }}" class=" btn btn-danger btn-sm">
+                        <i class="glyphicon glyphicon-trash">Modifier</i>
+                    </a>
+                {% endif %}
 
 
 
 
+            </div>
         {% endfor %}
     </div>
+
+
+
+
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Ajoutez un commentaire</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {{ formstart|raw }}
+
+                    {{ formend|raw }}
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% block javascripts %}
+
+    {% endblock %}
+
 {% endblock %}

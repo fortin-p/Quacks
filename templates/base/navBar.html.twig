@@ -1,0 +1,83 @@
+{% extends 'base/index.html.twig' %}
+{% block navbar %}
+    <style>
+        .example-wrapper {
+            margin: 1em auto;
+            max-width: 800px;
+            width: 95%;
+            font: 18px/1.5 sans-serif;
+        }
+
+        .example-wrapper code {
+            background: #F5F5F5;
+            padding: 2px 6px;
+        }
+
+        .quack {
+            border: solid 1px black;
+            margin-bottom: 20px;
+
+
+        }
+
+        .image {
+            width: 50px;
+            height: 50px;
+        }
+
+        .logout {
+            margin-left: 70rem;
+        }
+    </style>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">Navbar</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item active">
+                <a class="nav-link" href="{{ path('quack') }}">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('create') }}">Create Quack</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('list_quack') }}">list of Quack</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('contact') }}">Contact</a>
+            </li>
+            {% if app.user %}
+            <a class="nav-link disabled" href="{{ path('edit_ducks', { 'id': app.user.id }) }}">Account</a>
+            {% else %}
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('duck_create') }}">Registration</a>
+            </li>
+            {% endif %}
+            {% if app.user %}
+                <li>
+                    <img class="img-thumbnail float-right" style="width: 50px; height: 50px"
+                         src="{{ asset(app.user.profilImage) }}" alt="">
+                    <h5>{{ app.user.duckname }}</h5>
+
+                </li>
+                <li>
+                    <a class="logout" href="{{ path('app_logout') }}">Logout</a>
+                </li>
+            {% else %}
+                <li class=" nav-item">
+                    <a class="nav-link disabled" href="{{ path('app_login') }}">Login</a>
+                </li>
+            {% endif %}
+
+        </ul>
+    </div>
+</nav>
+
+{% block body %}
+{% endblock %}
+{% endblock %}
+

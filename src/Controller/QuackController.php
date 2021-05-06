@@ -2,14 +2,19 @@
 
 namespace App\Controller;
 
+use App\Entity\Comments;
 use App\Entity\Quack;
+use App\Form\CommentsType;
+use App\Form\QuackType;
+
 use App\Repository\QuackRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
+
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -33,12 +38,20 @@ class QuackController extends AbstractController
      * @param Quack $quack
      * @return Response
      */
-    public function listQuack(QuackRepository $quack)
+    public function renderInfo(QuackRepository $quack, Request $request, EntityManagerInterface $manager)
     {
-
+        $comment = new Comments();
+        $form = $this->createForm(CommentsType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $manager->persist($comment);
+            $manager->flush();
+            return $this->redirectToRoute('list_quack');
+        }
         return $this->render('quack/listQuack.html.twig', [
             'quacks' => $quack->findAll(),
-            'controller_name' => 'QuackController',
+            'form' => $form->createView(),
+
 
         ]);
 
@@ -49,16 +62,12 @@ class QuackController extends AbstractController
      */
     public function createQuack(Request $request, EntityManagerInterface $manager)
     {
+
         $quack = new Quack();
-        $form = $this->createFormBuilder($quack)
-            ->add('content', TextareaType::class, [
-                'attr' => [
-                    'class' => 'form-control'
-                ]
-            ])
-            ->getForm();
+        $form = $this->createForm(QuackType::class, $quack);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $quack->setDucks($this->getUser());
             $quack->setCreatedAt(new \DateTime());
             $manager->persist($quack);
             $manager->flush();
@@ -75,22 +84,47 @@ class QuackController extends AbstractController
     }
 
     /**
-     * @Route("/quack/modif", name="modif")
+     * @Route("/quack/modif/{id}", name="edit_Quack")
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
      */
-    public function modificateQuack()
+    public function modificateQuack(Quack $quack, Request $request, EntityManagerInterface $manager)
     {
+        $this->denyAccessUnlessGranted('EDIT', $quack);
+        $manager = $this->getDoctrine()->getManager();
+        $form = $this->createForm(QuackType::class, $quack);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $quack->setDucks($this->getUser());
+            $quack->setCreatedAt(new \DateTime());
+            $manager->flush();
+            return $this->redirectToRoute('list_quack');
+        }
         return $this->render('quack/modifQuack.html.twig', [
             'controller_name' => 'QuackController',
+            'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/quack/delete", name="delete")
+     * @Route("/quack/delete/{id}", name="delete")
      */
-    public function deleteQuack()
+    public function deleteQuack(Quack $quack)
     {
-        return $this->render('quack/deleteQuack.html.twig', [
-            'controller_name' => 'QuackController',
+        $this->denyAccessUnlessGranted('DELETE', $quack);
+        $entityManager = $this->getDoctrine()->getManager();
+        if (!$quack) {
+            throw $this->createNotFoundException(
+                'No quack found for id ' . $quack
+            );
+        }
+        $entityManager->remove($quack);
+        $entityManager->flush();
+        return $this->redirectToRoute('list_quack', [
+            'id' => $quack->getId(),
+
         ]);
+
     }
+
+
 }

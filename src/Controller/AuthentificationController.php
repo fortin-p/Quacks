@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Ducks;
 use Doctrine\ORM\EntityManagerInterface;
+use phpDocumentor\Reflection\Types\Null_;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -28,25 +29,30 @@ class AuthentificationController extends AbstractController
     }
 
     /**
-     * @Route("/authentification/new", name="duck_create")
+     * @Route("/", name="duck_create")
+     * @Route("/edit/{id}", name="edit_ducks")
      * @param Request $request
      * @param EntityManagerInterface $manager
      * @param UserPasswordEncoderInterface $encoder
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
-    public function createDuck(Request $request, EntityManagerInterface $manager,UserPasswordEncoderInterface $encoder)
+    public function form(Ducks $duck = Null, Request $request, EntityManagerInterface $manager, UserPasswordEncoderInterface $encoder)
     {
-        $duck = new Ducks();
+        if (!$duck) {
+            $duck = new Ducks();
+        }
+
         $form = $this->createFormBuilder($duck)
             ->add('firstname', TextType::class, [
                 'attr' => [
-                    'class' => 'form-control'
+                    'class' => 'form-control',
+
                 ]
             ])->add('lastname', TextType::class, [
                 'attr' => [
                     'class' => 'form-control']
             ])
-            ->add('DuckName', TextType::class, [
+            ->add('duckname', TextType::class, [
                 'attr' => [
                     'class' => 'form-control']
             ])
@@ -54,15 +60,21 @@ class AuthentificationController extends AbstractController
                 'attr' => [
                     'class' => 'form-control']
             ])
-            ->add('password', PasswordType::class,  [
+            ->add('password', PasswordType::class, [
+                'attr' => [
+                    'class' => 'form-control']
+            ])
+            ->add('ProfilImage', TextType::class, [
                 'attr' => [
                     'class' => 'form-control']
             ])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $password = $encoder->encodePassword($duck,$duck->getPassword());
+
+            $password = $encoder->encodePassword($duck, $duck->getPassword());
             $duck->setPassword($password);
+
             $manager->persist($duck);
             $manager->flush();
 
@@ -71,9 +83,9 @@ class AuthentificationController extends AbstractController
         dump($duck);
         return $this->render('authentification/create.html.twig', [
             'formAuth' => $form->createView(),
+            'editMode' => $duck->getId() !== Null,
         ]);
     }
-
 
 
 }

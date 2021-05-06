@@ -1,4 +1,5 @@
-{% extends 'base.html.twig' %}
+{% extends 'base/index.html.twig' %}
+
 
 {% block title %}Hello AuthentificationController!{% endblock %}
 
@@ -18,6 +19,7 @@
     </style>
 
     <div class="example-wrapper">
+        <h2>Inscriptions</h2>
         {{ form_start(formAuth) }}
         <div class="form-group">
             <label for="">FirstName</label>
@@ -25,14 +27,20 @@
             <label for="">LastName</label>
             {{ form_widget(formAuth.lastname) }}
             <label for="">DuckName</label>
-            {{ form_widget(formAuth.DuckName) }}
+            {{ form_widget(formAuth.duckname) }}
             <label for="">email</label>
             {{ form_widget(formAuth.email) }}
             <label for="">password</label>
             {{ form_widget(formAuth.password) }}
-
+            <label for="">image de profil</label>
+            {{ form_widget(formAuth.ProfilImage) }}
         </div>
-        <button type="submit" class="btn btn-sucess">Register</button>
+        <button type="submit" class="btn btn-sucess">
+            {% if editMode  %}
+            Update
+            {% else %}
+            Register</button>
+        {% endif %}
         {{ form_end(formAuth) }}
     </div>
 {% endblock %}

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\DucksRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -48,10 +50,29 @@ class Ducks implements UserInterface
     private $password;
 
     /**
-     * @ORM\Column(type="array")
+     * @ORM\OneToMany(targetEntity=Quack::class, mappedBy="ducks")
+     */
+    private $quacks;
+    /**
+     * @ORM\Column(type="array", length=255)
      */
     private $roles = [];
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=false)
+     */
+    private $ProfilImage;
+
+
+
+
+    public function __construct()
+    {
+        $this->Quack = new ArrayCollection();
+        $this->quack = new ArrayCollection();
+        $this->comment = new ArrayCollection();
+        $this->quacks = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -138,4 +159,50 @@ class Ducks implements UserInterface
     {
         // TODO: Implement eraseCredentials() method.
     }
+
+    /**
+     * @return Collection|Quack[]
+     */
+    public function getQuacks(): Collection
+    {
+        return $this->quacks;
+    }
+
+    public function addQuack(Quack $quack): self
+    {
+        if (!$this->quacks->contains($quack)) {
+            $this->quacks[] = $quack;
+            $quack->setDucks($this);
+        }
+
+        return $this;
+    }
+
+    public function removeQuack(Quack $quack): self
+    {
+        if ($this->quacks->removeElement($quack)) {
+            // set the owning side to null (unless already changed)
+            if ($quack->getDucks() === $this) {
+                $quack->setDucks(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getProfilImage(): ?string
+    {
+        return $this->ProfilImage;
+    }
+
+    public function setProfilImage(?string $ProfilImage): self
+    {
+        $this->ProfilImage = $ProfilImage;
+
+        return $this;
+    }
+
+
+
+
 }
