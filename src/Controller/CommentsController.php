@@ -22,22 +22,5 @@ class CommentsController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/quack/list", name="list_quack")
-     */
-    public function quackComments(Request $request, EntityManagerInterface $manager)
-    {
-        $comment = new Comments();
-        $form = $this->createForm(CommentsType::class);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $manager->persist($comment);
-            $manager->flush();
-            return $this->redirectToRoute('list_quack');
-        }
-        return $this->render('quack/listQuack.html.twig', [
-            'form' => $form->createView(),
 
-        ]);
-    }
 }
