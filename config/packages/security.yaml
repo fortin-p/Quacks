@@ -24,8 +24,8 @@ security:
 
 
             form_login:
-                login_path: duck_login
-                check_path: duck_login
+                login_path: app_login
+                check_path: app_login
             guard:
                 authenticators:
                     - App\Security\QuackNetAuthenticator
