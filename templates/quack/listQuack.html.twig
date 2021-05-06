@@ -3,34 +3,33 @@
 {% set formstart = form_start(form) %}
 {% set formend = form_end(form) %}
 {% block title %}Hello listQuack!{% endblock %}
+{% block stylesheets %}
+<style>
+    .example-wrapper {
+        margin: 1em auto;
+        max-width: 800px;
+        width: 95%;
+        font: 18px/1.5 sans-serif;
+    }
+
+    .example-wrapper code {
+        background: #F5F5F5;
+        padding: 2px 6px;
+    }
+
+    .quack {
+        border: solid 1px black;
+        margin-bottom: 20px;
+
+
+    }
+
+
+</style>
+    {% endblock %}
 
 {% block body %}
-    <style>
-        .example-wrapper {
-            margin: 1em auto;
-            max-width: 800px;
-            width: 95%;
-            font: 18px/1.5 sans-serif;
-        }
 
-        .example-wrapper code {
-            background: #F5F5F5;
-            padding: 2px 6px;
-        }
-
-        .quack {
-            border: solid 1px black;
-            margin-bottom: 20px;
-
-
-        }
-
-        .image {
-            width: 150px;
-            height: 150px;
-
-        }
-    </style>
 
     <div class="example-wrapper">
         <h1>Hello ✅</h1>
@@ -39,9 +38,6 @@
         listQuack
 
         {% for quack in quacks %}
-            <pre>
-    {{ quack.getDucks.getUsername }}
-</pre>
             <div class=" quack">
                 <div class="card ">
                     <h5 class="card-header">{{ quack.getDucks.getUsername }}
@@ -70,10 +66,6 @@
                         <i class="glyphicon glyphicon-trash">Modifier</i>
                     </a>
                 {% endif %}
-
-
-
-
             </div>
         {% endfor %}
     </div>

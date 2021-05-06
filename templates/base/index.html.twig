@@ -1,12 +1,31 @@
 <!DOCTYPE html>
 <html>
+{% block head %}
 <head>
+
     <meta charset="UTF-8">
     <title>{% block title %}Welcome!{% endblock %}</title>
 
     {# Run `composer require symfony/webpack-encore-bundle`
            and uncomment the following Encore helpers to start using Symfony UX #}
     {% block stylesheets %}
+        <style>
+            .example-wrapper code{
+                margin: 1em auto;
+                max-width: 800px;
+                width: 95%;
+                font: 18px/1.5 sans-serif;
+            }
+
+            .example-wrapper code {
+                background: #F5F5F5;
+                padding: 2px 6px;
+            }
+            .logout {
+                margin-left: 70rem;
+            }
+
+        </style>
         {# {{ encore_entry_link_tags('app') }} #}
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
               integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
@@ -21,10 +40,9 @@
             $('#myModal').modal(options)
         </script>
     {% endblock %}
-    <style>
 
-    </style>
 </head>
+{% endblock %}
 <body>
 {% block navbar %}
     {% include 'base/navBar.html.twig' %}
